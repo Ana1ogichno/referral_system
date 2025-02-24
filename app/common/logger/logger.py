@@ -25,6 +25,11 @@ class LoggerManager:
     __user_log_level: str = LoggerLevelEnum.INFO.value
     __user_log_format: str = LoggerFormatEnum.BASE.value
 
+    # Code logger
+    __code_log_name: str = LoggerNameEnum.CODE.value
+    __code_log_level: str = LoggerLevelEnum.INFO.value
+    __code_log_format: str = LoggerFormatEnum.BASE.value
+
     @staticmethod
     def __configure_logger(logger: logging.Logger, level: str, format_str: str) -> None:
         logger.setLevel(level)
@@ -76,4 +81,12 @@ class LoggerManager:
             name=cls.__user_log_name,
             level=cls.__user_log_level,
             format_str=cls.__user_log_format,
+        )
+
+    @classmethod
+    def get_code_logger(cls) -> logging.Logger:
+        return cls.__get_logger(
+            name=cls.__code_log_name,
+            level=cls.__code_log_level,
+            format_str=cls.__code_log_format,
         )

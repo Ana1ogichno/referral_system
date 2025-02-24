@@ -12,7 +12,7 @@ class CoreSchema(BaseModel):
     @model_validator(mode="after")
     def format_datetime(self) -> "CoreSchema":
         fields = {
-            k: v.replace(microsecond=0).astimezone(pytz.timezone(settings.project.TZ))
+            k: v.replace(microsecond=0).astimezone(pytz.timezone(settings.postgres.TZ))
             for k, v in self.__dict__.items()
             if isinstance(v, datetime) and not v.tzinfo
         }

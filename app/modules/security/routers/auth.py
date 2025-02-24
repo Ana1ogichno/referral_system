@@ -6,7 +6,6 @@ from jose import jwt
 from starlette import status
 from starlette.responses import JSONResponse
 
-from app.common import schemas
 from app.common.deps import oauth2_scheme
 from app.common.deps.current_user import get_current_user
 from app.common.deps.token import validate_refresh_token

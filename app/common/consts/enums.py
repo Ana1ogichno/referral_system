@@ -23,6 +23,7 @@ class LoggerLevelEnum(StringEnum):
 
 class LoggerNameEnum(StringEnum):
     SECURITY = "SECURITY"
-    USER = "USER"
     CRUD = "CRUD"
     BASE = "BASE"
+    USER = "USER"
+    CODE = "CODE"
