@@ -9,6 +9,10 @@ tags_metadata = [
         "name": "Auth",
         "description": "Basic login/logout logic",
     },
+    {
+        "name": "Code",
+        "description": "Code logic",
+    },
     # ...other route groups
 ]
 
