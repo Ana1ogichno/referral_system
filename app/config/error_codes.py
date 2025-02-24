@@ -14,5 +14,8 @@ class ErrorCodes(Enum):
     # users
     NOT_ALLOWED = (100, 405, "Доступ запрещен")
     INCORRECT_CREDENTIALS = (101, 401, "Неверные логин/пароль")
-    USER_DEACTIVATED = (102, 403, "Учётная запись заблокирована")
-    LOGIN_ALREADY_EXISTS = (102, 400, "Пользователь с данным login уже существует")
+    USER_NOT_FOUND = (102, 404, "Пользователь не найден")
+    EMAIL_ALREADY_EXISTS = (102, 400, "Пользователь с данным email уже существует")
+    # codes
+    CODE_ALREADY_EXISTS = (200, 400, "У вас уже есть реферальный код")
+    CODE_NOT_FOUND = (201, 404, "Код не найден")

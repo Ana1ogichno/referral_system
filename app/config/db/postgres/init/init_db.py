@@ -19,13 +19,13 @@ async def init_db(db: AsyncSession) -> None:
     # Init First SuperUser
     logging.info("Start Create Superuser")
 
-    superuser = await user_service.get_user_by_login(
-        login=settings.project.FIRST_SUPERUSER_LOGIN
+    superuser = await user_service.get_user_by_email(
+        email=settings.project.FIRST_SUPERUSER_LOGIN
     )
 
     if not superuser:
         user_in = UserCreate(
-            login=settings.project.FIRST_SUPERUSER_LOGIN,
+            email=settings.project.FIRST_SUPERUSER_LOGIN,
             password=settings.project.FIRST_SUPERUSER_PASSWORD,
         )
 

@@ -1,7 +1,6 @@
-from enum import IntEnum
+from enum import Enum
 
 
-class SessionTypeEnum(IntEnum):
-    GAME = 0
-    SINGLE_TRAINING = 1
-    PAIR_TRAINING = 2
+class RoutersPath(str, Enum):
+    me = "/me"
+    referrals = "/my_referrals"

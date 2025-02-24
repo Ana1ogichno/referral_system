@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import select, Result
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,10 +24,10 @@ class UserRepository(CrudRepository[UserModel, UserCreate, UserUpdate]):
         super().__init__(UserModel, db)
 
     @logging_function_info(logger=logger)
-    async def get_by_login(
-        self, login: str, custom_options: tuple[ExecutableOption, ...] = None
+    async def get_by_email(
+        self, email: str, custom_options: tuple[ExecutableOption, ...] = None
     ) -> UserModel | None:
-        query = select(self.model).where(self.model.login == login)
+        query = select(self.model).where(self.model.email == email)
 
         if isinstance(custom_options, tuple):
             query = query.options(*custom_options)
@@ -56,11 +58,11 @@ class UserRepository(CrudRepository[UserModel, UserCreate, UserUpdate]):
     @logging_function_info(logger=logger)
     async def authenticate(
         self,
-        login: str,
+        email: str,
         password: str,
         custom_options: tuple[ExecutableOption, ...] = None,
     ) -> UserModel | None:
-        user = await self.get_by_login(login=login, custom_options=custom_options)
+        user = await self.get_by_email(email=email, custom_options=custom_options)
 
         if not user:
             return None
@@ -68,3 +70,15 @@ class UserRepository(CrudRepository[UserModel, UserCreate, UserUpdate]):
             return None
 
         return user
+
+    @logging_function_info(logger=logger)
+    async def get_referrals_by_user_sid(
+            self, user_sid: UUID, custom_options: tuple[ExecutableOption, ...] = None
+    ):
+        query = select(self.model).where(self.model.sid == user_sid)
+
+        if isinstance(custom_options, tuple):
+            query = query.options(*custom_options)
+
+        result: Result = await self.db.execute(query)
+        return result.scalars().first()

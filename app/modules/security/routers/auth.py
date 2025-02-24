@@ -16,6 +16,7 @@ from app.config.db.session import DBSessionManager
 from app.config.error_codes import ErrorCodes
 from app.config.exception import BackendException
 from app.config.settings import settings
+from ..consts import RoutersPath
 from ...user.schemas import UserInDBBase, UserCreate
 from ...user.services import UserService
 
@@ -24,7 +25,7 @@ router = APIRouter()
 logger = LoggerManager.get_security_logger()
 
 
-@router.post(path="/register", response_model=UserInDBBase)
+@router.post(path=RoutersPath.register, response_model=UserInDBBase)
 async def register(
     user_in: UserCreate,
     user_service: UserService.register_deps(),
@@ -41,7 +42,26 @@ async def register(
     return user
 
 
-@router.post(path="/login", response_model=LoginToken)
+@router.post(path=RoutersPath.register_by_code, response_model=UserInDBBase)
+async def register_by_code(
+    code: str,
+    user_in: UserCreate,
+    user_service: UserService.register_deps(),
+) -> UserInDBBase:
+    """
+    User registering
+    """
+
+    user = await user_service.create_user_by_code(
+        code=code,
+        user_in=user_in
+    )
+
+    logger.debug("User has been created")
+    return user
+
+
+@router.post(path=RoutersPath.login, response_model=LoginToken)
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     user_service: UserService.register_deps(),
@@ -52,7 +72,7 @@ async def login(
 
     logger.debug("Authenticate user")
     user = await user_service.authenticate_user(
-        login=form_data.username,
+        email=form_data.username,
         password=form_data.password,
     )
     if not user:
@@ -69,7 +89,7 @@ async def login(
     return LoginToken(access_token=access_token, refresh_token=refresh_token)
 
 
-@router.post(path="/refresh_token", response_model=LoginToken)
+@router.post(path=RoutersPath.refresh, response_model=LoginToken)
 async def update_access_token(
     refresh_token: Annotated[RefreshToken, Depends()],
     db_session_manager: DBSessionManager.register_deps(),
@@ -99,7 +119,7 @@ async def update_access_token(
     return LoginToken(access_token=access_token, refresh_token=refresh_token)
 
 
-@router.post(path="/logout", response_model=Msg)
+@router.post(path=RoutersPath.logout, response_model=Msg)
 async def logout(
     token: Annotated[str, Depends(oauth2_scheme)],
     current_user: Annotated[UserInDBBase, Depends(get_current_user)],

@@ -20,9 +20,23 @@ class UserModel(CoreModel):
         use_existing_column=True,
         unique=True,
     )
-    login: Mapped[str] = mapped_column(index=True, unique=True, comment="email/referral_code")
+    email: Mapped[str] = mapped_column(index=True, unique=True, comment="email of user")
     hashed_password: Mapped[str] = mapped_column(comment="password")
 
     code: Mapped["CodeModel"] = relationship(
         back_populates="user"
+    )
+
+    referrer: Mapped["UserModel"] = relationship(
+        secondary="users.invitation",
+        primaryjoin="UserModel.sid==users.invitation.c.referral",
+        secondaryjoin="UserModel.sid==users.invitation.c.referrer",
+        back_populates="referrals"
+    )
+
+    referrals: Mapped[list["UserModel"]] = relationship(
+        secondary="users.invitation",
+        primaryjoin="UserModel.sid==users.invitation.c.referrer",
+        secondaryjoin="UserModel.sid==users.invitation.c.referral",
+        back_populates="referrer"
     )

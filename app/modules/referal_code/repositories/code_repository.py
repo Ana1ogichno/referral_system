@@ -30,3 +30,16 @@ class CodeRepository(CrudRepository[CodeModel, CodeCreate, CodeUpdate]):
 
         result: Result = await self.db.execute(query)
         return result.scalars().first()
+
+    @logging_function_info(logger=logger)
+    async def get_by_value(
+            self, value: str, custom_options: tuple[ExecutableOption, ...] = None
+    ) -> CodeModel | None:
+        query = select(self.model).where(self.model.value == value)
+
+        if isinstance(custom_options, tuple):
+            query = query.options(*custom_options)
+
+        result: Result = await self.db.execute(query)
+        return result.scalars().first()
+

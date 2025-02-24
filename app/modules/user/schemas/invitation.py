@@ -7,23 +7,22 @@ from app.common.decorators.partial_schema import partial_schema
 from app.common.schemas import CoreSchema
 
 
-class CodeBase(CoreSchema):
+class InvitationBase(CoreSchema):
     model_config = ConfigDict(from_attributes=True)
 
-    value: str
-    lifetime: datetime
+    referrer: UUID
+    referral: UUID
 
 
-class CodeCreate(CodeBase):
-    user_sid: UUID
-
-
-@partial_schema
-class CodeUpdate(CodeBase):
+class InvitationCreate(InvitationBase):
     pass
 
 
-class CodeInDBBase(CodeBase):
-    sid: UUID
+@partial_schema
+class InvitationUpdate(InvitationBase):
+    pass
+
+
+class InvitationInDBBase(InvitationBase):
     created_at: datetime
     updated_at: datetime
